@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>❤️ Rawan</title>
+<style>
+/* ══ RESET & BASE ═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#ff2d78;--pinkG:#ff6eb4;
+  --pp:rgba(255,45,120,.55);--pd:rgba(255,45,120,.18);
+  --green:#00e676;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;
+  font-family:'Segoe UI',system-ui,sans-serif;}
+
+/* ══ GLOBAL PHOTO LAYER ══════════════════════════════════════ */
+#photo-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.pb{
+  position:absolute;
+  width:clamp(140px,22vw,320px);
+  height:clamp(175px,27vw,400px);
+  border-radius:14px;object-fit:cover;
+  opacity:0;will-change:transform,opacity,filter;pointer-events:none;
+}
+
+/* ══ PHASE WRAPPER ═══════════════════════════════════════════ */
+.phase{
+  position:fixed;inset:0;z-index:10;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .9s ease;
+}
+.phase.active{opacity:1;pointer-events:auto}
+
+/* ══════════════════════════════════════════════════════════════
+   PHASE 1 — QUIZ
+══════════════════════════════════════════════════════════════ */
+#phase-quiz{}
+
+.quiz-card{
+  background:rgba(15,15,15,.82);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:22px;
+  padding:clamp(22px,5vw,44px) clamp(20px,5vw,42px);
+  width:min(560px,88vw);
+  text-align:center;
+  box-shadow:0 8px 48px rgba(0,0,0,.75),0 0 60px rgba(255,45,120,.08);
+  animation:cardIn .7s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.quiz-q{
+  color:#fff;
+  font-size:clamp(1rem,3.5vw,1.35rem);
+  line-height:1.7;
+  margin-bottom:clamp(20px,4vw,32px);
+  direction:rtl;text-align:center;
+  text-shadow:0 0 18px rgba(255,110,180,.35);
+}
+
+.btn-row{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:nowrap;
+  direction:ltr !important;
+  transition:all .4s ease;
+}
+
+/* Option A — radiant pink */
+.btn-a{
+  flex:1 1 0;
+  min-width:0;
+  padding:clamp(10px,2.5vw,16px) clamp(12px,3vw,22px);
+  border:none;border-radius:50px;cursor:pointer;
+  background:linear-gradient(135deg,#ff2d78,#ff6eb4);
+  color:#fff;font-weight:700;
+  font-size:clamp(.78rem,2.2vw,1rem);
+  direction:rtl;
+  box-shadow:0 0 20px rgba(255,20,147,.8),0 0 40px rgba(255,45,120,.4);
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.btn-a.correct{
+  background:linear-gradient(135deg,#00e676,#69f0ae)!important;
+  box-shadow:0 0 24px rgba(0,230,118,.85),0 0 50px rgba(0,230,118,.4)!important;
+  transform:scale(1.08)!important;
+}
+
+/* Option B — neutral grey */
+.btn-b{
+  flex:1 1 0;
+  min-width:0;
+  padding:clamp(10px,2.5vw,16px) clamp(12px,3vw,22px);
+  border:1px solid rgba(255,255,255,.12);border-radius:50px;cursor:pointer;
+  background:rgba(60,60,60,.55);
+  color:rgba(255,255,255,.65);
+  font-size:clamp(.78rem,2.2vw,1rem);
+  direction:rtl;
+  transition:all .38s ease;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.btn-b:disabled{cursor:default}
+
+/* ══════════════════════════════════════════════════════════════
+   PHASE 2 — PRAISE
+══════════════════════════════════════════════════════════════ */
+#phase-praise{text-align:center;gap:18px;padding:20px}
+
+.praise-line{
+  color:#fff;
+  font-size:clamp(1rem,3.2vw,1.4rem);
+  line-height:1.8;
+  direction:rtl;
+  opacity:0;transform:translateY(-40px);
+  transition:opacity .8s ease,transform .8s ease;
+  text-shadow:0 0 22px rgba(255,110,180,.6);
+  max-width:min(640px,90vw);
+}
+.praise-line.in{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════════════════════════════════════
+   PHASE 3 — LOCK
+══════════════════════════════════════════════════════════════ */
+#phase-lock{flex-direction:column;gap:0}
+
+#heart-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+#heart-text{
+  position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);
+  color:#fff;font-size:clamp(.72rem,2.2vw,1rem);font-weight:300;
+  letter-spacing:.1em;white-space:nowrap;text-align:center;
+  text-shadow:0 0 16px var(--pinkG),0 0 36px var(--pinkG);
+  opacity:0;animation:ftIn 2s 1.4s ease forwards;
+  z-index:2;pointer-events:none;direction:ltr!important;
+}
+@keyframes ftIn{to{opacity:1}}
+
+#lock-widget{
+  position:relative;z-index:10;
+  top:20%;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  direction:ltr!important;
+  animation:riseIn .9s .5s ease both;
+}
+@keyframes riseIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+#lock-label{
+  color:var(--pinkG);font-size:clamp(.6rem,2vw,.8rem);
+  letter-spacing:.22em;text-transform:uppercase;
+  text-shadow:0 0 10px var(--pinkG);direction:ltr!important;
+}
+
+.lock-body{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(12,0,8,.9);
+  border:1.5px solid var(--pink);border-radius:20px;
+  padding:clamp(10px,2.5vw,16px) clamp(14px,3.5vw,24px);
+  position:relative;direction:ltr!important;
+  animation:pulseL 2.4s ease-in-out infinite;
+  box-shadow:0 0 28px var(--pp),0 0 70px rgba(255,45,120,.28),inset 0 0 22px rgba(255,45,120,.06);
+}
+@keyframes pulseL{
+  0%,100%{box-shadow:0 0 28px var(--pp),0 0 70px rgba(255,45,120,.28),inset 0 0 22px rgba(255,45,120,.06)}
+  50%{box-shadow:0 0 50px var(--pink),0 0 110px rgba(255,45,120,.48),inset 0 0 34px rgba(255,45,120,.14)}
+}
+.lock-shackle{
+  position:absolute;top:-44px;left:50%;transform:translateX(-50%);
+  width:46px;height:50px;
+  border:4px solid var(--pink);border-bottom:none;border-radius:24px 24px 0 0;
+  box-shadow:0 0 14px var(--pinkG),0 0 30px var(--pp);
+  transition:transform .9s cubic-bezier(.36,.07,.19,.97),opacity .9s;
+}
+.lock-shackle.open{transform:translateX(-50%) rotate(-42deg) translateY(-22px);opacity:0}
+
+.dial-wrap{display:flex;flex-direction:column;align-items:center;user-select:none;direction:ltr!important}
+.dial-btn{
+  background:none;border:none;color:var(--pinkG);
+  font-size:clamp(13px,4vw,19px);cursor:pointer;
+  padding:4px 12px;line-height:1;
+  text-shadow:0 0 10px var(--pinkG);opacity:.72;
+  transition:opacity .15s,transform .15s;
+  min-width:44px;min-height:36px;
+  display:flex;align-items:center;justify-content:center;
+}
+.dial-btn:hover{opacity:1;transform:scale(1.28)}
+.dial-btn:active{transform:scale(.9)}
+.dial-digit{
+  width:clamp(44px,12vw,56px);height:clamp(56px,15vw,68px);
+  border:1.5px solid rgba(255,45,120,.55);border-radius:8px;
+  background:rgba(18,0,12,.92);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(1.35rem,6vw,2.1rem);font-weight:700;color:#fff;
+  text-shadow:0 0 14px var(--pinkG),0 0 28px var(--pinkG);
+  position:relative;overflow:hidden;
+  box-shadow:inset 0 0 14px rgba(255,45,120,.1);
+  direction:ltr!important;text-align:center;
+}
+.dial-digit::before,.dial-digit::after{
+  content:'';position:absolute;left:0;right:0;height:1px;
+  background:rgba(255,45,120,.36);box-shadow:0 0 5px var(--pink);
+}
+.dial-digit::before{top:28%}.dial-digit::after{bottom:28%}
+.dial-digit.spinning{animation:spinD .17s ease}
+@keyframes spinD{0%{transform:translateY(-38%);opacity:.3}60%{transform:translateY(12%);opacity:.9}100%{transform:translateY(0);opacity:1}}
+
+.dial-dash{color:var(--pinkG);font-size:clamp(1rem,3.5vw,1.5rem);font-weight:700;
+  margin:0 1px;text-shadow:0 0 10px var(--pinkG),0 0 24px var(--pink);
+  align-self:center;direction:ltr!important}
+.dial-dot{color:rgba(255,110,180,.5);font-size:1.2rem;margin:0 1px;align-self:center}
+
+#unlock-btn{
+  background:transparent;border:1.5px solid var(--pink);
+  color:var(--pinkG);font-size:clamp(.62rem,2vw,.82rem);
+  letter-spacing:.2em;text-transform:uppercase;
+  padding:10px 32px;border-radius:50px;cursor:pointer;
+  box-shadow:0 0 14px var(--pp);
+  transition:box-shadow .22s,background .22s;
+  direction:ltr!important;min-width:120px;
+}
+#unlock-btn:hover{background:rgba(255,45,120,.12);box-shadow:0 0 30px var(--pink)}
+#unlock-btn:active{transform:scale(.97)}
+
+.shake{animation:shk .5s cubic-bezier(.36,.07,.19,.97) both!important}
+@keyframes shk{10%,90%{transform:translateX(-5px)}20%,80%{transform:translateX(9px)}30%,50%,70%{transform:translateX(-11px)}40%,60%{transform:translateX(11px)}100%{transform:translateX(0)}}
+.dial-digit.wrong{animation:wFlash .38s ease}
+@keyframes wFlash{0%,100%{border-color:rgba(255,45,120,.55)}45%{border-color:#f11;box-shadow:inset 0 0 20px rgba(255,0,0,.32)}}
+
+/* ══════════════════════════════════════════════════════════════
+   PARTICLE CANVAS
+══════════════════════════════════════════════════════════════ */
+#particle-canvas{
+  position:fixed;inset:0;pointer-events:none;z-index:50;
+  opacity:0;transition:opacity .2s;
+}
+#particle-canvas.active{opacity:1}
+
+/* ══════════════════════════════════════════════════════════════
+   PHASE 4 — FINAL CARD
+══════════════════════════════════════════════════════════════ */
+#phase-final{justify-content:center;padding:16px}
+
+#content-card{
+  position:relative;
+  width:min(680px,80vw);
+  max-height:70vh;
+  overflow-y:auto;
+  background:rgba(10,10,10,.82);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:20px;
+  backdrop-filter:blur(22px) saturate(1.5);
+  -webkit-backdrop-filter:blur(22px) saturate(1.5);
+  box-shadow:0 0 0 1px rgba(255,45,120,.08),0 10px 52px rgba(0,0,0,.82),0 0 70px rgba(255,45,120,.07);
+  padding:clamp(18px,3.5vw,42px) clamp(18px,3.5vw,40px);
+  scrollbar-width:thin;scrollbar-color:rgba(255,45,120,.3) transparent;
+}
+#content-card::-webkit-scrollbar{width:3px}
+#content-card::-webkit-scrollbar-thumb{background:rgba(255,45,120,.32);border-radius:3px}
+
+@media(max-width:520px){
+  #content-card{width:82vw!important;max-height:58vh!important;padding:16px 15px!important}
+}
+@media(max-height:600px) and (orientation:landscape){
+  #content-card{width:min(560px,60vw)!important;max-height:74vh!important}
+}
+
+.card-header{text-align:center;margin-bottom:clamp(12px,2.8vw,24px);
+  padding-bottom:clamp(10px,2vw,18px);border-bottom:1px solid rgba(255,45,120,.2)}
+.card-hrt{display:block;font-size:clamp(1.4rem,4vw,2.2rem);
+  filter:drop-shadow(0 0 12px var(--pink));margin-bottom:5px;
+  animation:hb 2.4s ease-in-out infinite}
+@keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.2)}28%{transform:scale(1)}42%{transform:scale(1.13)}70%{transform:scale(1)}}
+.card-sub{color:rgba(255,255,255,.5);font-size:clamp(.55rem,1.4vw,.74rem);
+  letter-spacing:.24em;text-transform:uppercase;direction:ltr}
+
+#msg{
+  direction:rtl;text-align:right;line-height:1.9;
+  font-family:'Segoe UI','Arial',sans-serif;
+  color:rgba(255,255,255,.93);font-size:clamp(.78rem,1.8vw,1.02rem);
+  text-shadow:0 1px 8px rgba(0,0,0,.85);
+}
+#msg p{margin-bottom:1.25em}#msg p:last-child{margin-bottom:0}
+
+.card-footer{text-align:center;margin-top:clamp(12px,2.8vw,22px);
+  padding-top:clamp(10px,2vw,16px);border-top:1px solid rgba(255,45,120,.2);
+  color:rgba(255,45,120,.68);font-size:clamp(.58rem,1.3vw,.72rem);
+  letter-spacing:.18em;direction:ltr}
+
+/* Stars */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 2.2s ease 1s}
+#stars.on{opacity:1}
+
+/* Reset button */
+#reset-btn{
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  background:rgba(10,10,10,.8);
+  border:1.5px solid var(--pink);
+  border-radius:50px;
+  padding:10px 18px;
+  color:var(--pinkG);font-size:1.1rem;
+  cursor:pointer;
+  box-shadow:0 0 16px var(--pp);
+  backdrop-filter:blur(10px);
+  transition:box-shadow .2s,transform .2s;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s,box-shadow .2s,transform .2s;
+}
+#reset-btn.visible{opacity:1;pointer-events:auto}
+#reset-btn:hover{box-shadow:0 0 28px var(--pink);transform:scale(1.06)}
+#reset-btn:active{transform:scale(.95)}
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<canvas id="stars"></canvas>
+<!-- Global photo background -->
+<div id="photo-bg"></div>
+
+<!-- ═══ PHASE 1: QUIZ ═══════════════════════════════════════ -->
+<div id="phase-quiz" class="phase">
+  <div class="quiz-card" id="quiz-card">
+    <div class="quiz-q" id="quiz-q">...</div>
+    <div class="btn-row" id="btn-row">
+      <button class="btn-a" id="btn-a">...</button>
+      <button class="btn-b" id="btn-b">...</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHASE 2: PRAISE ═════════════════════════════════════ -->
+<div id="phase-praise" class="phase">
+  <div class="praise-line" id="pl1">شطوووووووووورة حبيبتي يا قلبي بتعرفي كيف بحبك انتي يا عمري بموت فيكي 🥹🥹🙈❤️‍🔥❤️‍🔥❤️‍🔥</div>
+  <div class="praise-line" id="pl2">و هذا القفل هو هديتك يا عمري🙈❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥</div>
+</div>
+
+<!-- ═══ PHASE 3: LOCK ════════════════════════════════════════ -->
+<div id="phase-lock" class="phase">
+  <canvas id="heart-canvas"></canvas>
+  <div id="heart-text">I love you, Rawan</div>
+  <div id="lock-widget">
+    <div id="lock-label">Enter the code</div>
+    <div class="lock-body" id="lock-body">
+      <div class="lock-shackle" id="shackle"></div>
+      <div class="dial-wrap">
+        <button class="dial-btn" data-dial="0" data-dir="up">▲</button>
+        <div class="dial-digit" id="d0">0</div>
+        <button class="dial-btn" data-dial="0" data-dir="down">▼</button>
+      </div>
+      <div class="dial-dot">·</div>
+      <div class="dial-wrap">
+        <button class="dial-btn" data-dial="1" data-dir="up">▲</button>
+        <div class="dial-digit" id="d1">0</div>
+        <button class="dial-btn" data-dial="1" data-dir="down">▼</button>
+      </div>
+      <div class="dial-dash">—</div>
+      <div class="dial-wrap">
+        <button class="dial-btn" data-dial="2" data-dir="up">▲</button>
+        <div class="dial-digit" id="d2">0</div>
+        <button class="dial-btn" data-dial="2" data-dir="down">▼</button>
+      </div>
+    </div>
+    <button id="unlock-btn">Unlock ❤️</button>
+  </div>
+</div>
+
+<!-- Particle burst canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ═══ PHASE 4: FINAL CARD ══════════════════════════════════ -->
+<div id="phase-final" class="phase">
+  <div id="content-card">
+    <div class="card-header">
+      <span class="card-hrt">❤️‍🔥</span>
+      <span class="card-sub">A Message For You, Rawan</span>
+    </div>
+    <div id="msg">
+      <p>كل عام وإنتي بخير يا قلبي وعمري كلو وكل دنيتي الحُلوة.. 🥹❤️‍🔥</p>
+      <p>صح إني تأخرت عليكي شوي في المعايدة المرة هاي وما جبت لك الهدية من اول بس والله العظيم ه التأخير ما كان إهمال أبدًا، بالعكس تماماً! كل القصة إني كنت قاعد بسابق الوقت وبظبطلك وبطوّرلك الهدية حقت العيد هادي يلي بين إيديكي الحين.. 🤭❤️‍🔥 كنت حابب أعملك مفاجأة مجنونة ومختلفة عشان عيونك🫂🙈❤️‍🔥، شي يطير عقلك ويفرح قلبك ويثبتلك قديش أنا أموت فيكي وبعشق الأرض اللي بتمشي عليها، ودايمًا بفكر كيف أسعدك يا حبيبتي.. 🙈❤️‍🔥</p>
+      <p>بدي يامي هيك تشوفي الهدية وإنتي مرتاحة البال، ومطمنة ومبسوطة على الآخر، وأي تفكير سلبي أو خوف من بكرا شيليه من راسك تماماً وانسيه.. 🥹❤️‍🔥 والله العظيم يا روحي وعمري إنو ما في أي شي بالكون هاد كلو، ولا أي ظرف أو مخلوق، رح يقدر يفرق بيننا أو يبعدنا عن بعض لو شو ما صار، إحنا خلاص صرنا روح واحدة بجسدين.. 🙈❤️‍🔥 الأيام الجاية كلها رح تكون أحلى بكتير من كل شي مضى، والظروف كلها رح تظبط وكل الأمور المعقدة رح تتسهل وتكون تمام التمام وبأفضل حال بإذن الله.. 🤭❤️‍🔥</p>
+      <p>حطي في بالك دايمًا وتأكدي إنو إحنا رح نتزوج يعني رح نتزوج بإذن الله، ورح نكون مع بعض في بيتنا، ورح نعيش كل الأعياد والمناسبات واللحظات الجاية وإحنا ماسكين إيدين بعض ومكتفين ببعض عن العالم كلو.. 🥹❤️‍🔥 تخيلي بس كيف رح تكون حياتنا وأعيادنا وإحنا تحت سقف واحد وبنصحى بوجه بعض🤭❤️‍🔥 أنا دنيتي وفرحتي كلو بدأ معاكي إنتي، ورح تكمّل معاكي وبس، ومستحيل أسمح لأي شي في الدنيا يخرب حبنا أو يوقف في طريق حلمنا.. 🙈❤️‍🔥 أموت فيكي يا أغلى وأجمل وأحن ملكة عندي بالكون كله، وكل عيد وإنتي عيدي، وكل عام وإنتي معي وجوات قلبي وروحي يا روان.. 🥹❤️‍🔥</p>
+    </div>
+    <div class="card-footer">with all my love, always 💗</div>
+  </div>
+</div>
+
+<!-- Reset button (phase 4 only) -->
+<button id="reset-btn">🙈❤️‍🔥❤️‍🔥❤️‍🔥</button>
+
+<script>
+(function(){
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════ */
+function showPhase(id){
+  document.querySelectorAll('.phase').forEach(p=>{
+    p.classList.remove('active');
+    p.style.display='';
+  });
+  const el=document.getElementById(id);
+  el.style.display='flex';
+  // Force reflow then fade in
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('active')));
+}
+function hidePhase(id,cb){
+  const el=document.getElementById(id);
+  el.classList.remove('active');
+  setTimeout(()=>{ el.style.display='none'; if(cb)cb(); },950);
+}
+
+/* ═══════════════════════════════════════════════════════
+   FLOATING PHOTOS  (persistent background, 8 images)
+═══════════════════════════════════════════════════════ */
+const IMGS=['image1.jpg','image2.jpg','image3.jpg','image4.jpg',
+            'image5.jpg','image6.jpg','image7.jpg','image8.jpg'];
+const photoBg=document.getElementById('photo-bg');
+let photoTimer=null;
+
+// Distribute across 8 quadrant zones so they cover full viewport
+const ZONES=[
+  {xr:[0,.35], yr:[0,.38]},
+  {xr:[.35,.65],yr:[0,.35]},
+  {xr:[.65,1], yr:[0,.38]},
+  {xr:[.72,1], yr:[.3,.65]},
+  {xr:[.62,1], yr:[.6,1]},
+  {xr:[.25,.65],yr:[.62,1]},
+  {xr:[0,.38], yr:[.58,1]},
+  {xr:[0,.32], yr:[.32,.68]},
+];
+let zoneIdx=0;
+
+function spawnPhoto(){
+  const src=IMGS[Math.floor(Math.random()*IMGS.length)];
+  const img=document.createElement('img');
+  img.className='pb'; img.src=src;
+
+  const vw=window.innerWidth, vh=window.innerHeight;
+  const z=ZONES[zoneIdx%ZONES.length]; zoneIdx++;
+  const sx=z.xr[0]*vw+(Math.random()*(z.xr[1]-z.xr[0])*vw);
+  const sy=z.yr[0]*vh+(Math.random()*(z.yr[1]-z.yr[0])*vh);
+
+  img.style.left=sx+'px'; img.style.top=sy+'px';
+  img.style.transform=`scale(.9) rotate(${(Math.random()-.5)*10}deg)`;
+  // Start with small blur, end with ~2px (20% intensity)
+  img.style.filter=`blur(4px)`;
+  photoBg.appendChild(img);
+
+  const dur=13000+Math.random()*10000;
+  const dx=(Math.random()-.5)*180, dy=-30-Math.random()*100;
+  const fScale=.82+Math.random()*.45, fRot=(Math.random()-.5)*18;
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    img.style.transition=`opacity 2s ease, transform ${dur}ms ease, filter ${dur}ms ease`;
+    img.style.opacity=(0.26+Math.random()*.14).toFixed(2);
+    img.style.transform=`translate(${dx}px,${dy}px) scale(${fScale}) rotate(${fRot}deg)`;
+    // Reduced blur final: 2px (light, ~20% intensity)
+    img.style.filter=`blur(2px)`;
+  }));
+
+  setTimeout(()=>{
+    img.style.opacity='0';
+    setTimeout(()=>img.remove(),2200);
+  },dur-2300);
+}
+
+function startPhotos(){
+  if(photoTimer)return;
+  for(let i=0;i<6;i++) setTimeout(spawnPhoto,i*650);
+  photoTimer=setInterval(spawnPhoto,2800);
+}
+// Photos run from the very start across all phases
+startPhotos();
+
+/* ═══════════════════════════════════════════════════════
+   STARS  (canvas)
+═══════════════════════════════════════════════════════ */
+const sCan=document.getElementById('stars');
+const sCtx=sCan.getContext('2d');
+let sW,sH,slist=[];
+function buildStars(){
+  sW=sCan.width=window.innerWidth; sH=sCan.height=window.innerHeight;
+  slist=Array.from({length:130},()=>({
+    x:Math.random()*sW,y:Math.random()*sH,
+    r:Math.random()*1.1+.18,ph:Math.random()*Math.PI*2
+  }));
+}
+function drawStars(){
+  sCtx.clearRect(0,0,sW,sH);
+  for(const s of slist){
+    s.ph+=.014;
+    const al=(Math.sin(s.ph)+1)/2*.5+.18;
+    sCtx.fillStyle=`rgba(255,195,220,${al})`;
+    sCtx.beginPath();sCtx.arc(s.x,s.y,s.r,0,Math.PI*2);sCtx.fill();
+  }
+}
+function loopStars(){drawStars();requestAnimationFrame(loopStars);}
+
+/* ═══════════════════════════════════════════════════════
+   NEURAL HEART  (canvas, phase 3 only)
+═══════════════════════════════════════════════════════ */
+const hCan=document.getElementById('heart-canvas');
+const hCtx=hCan.getContext('2d');
+let hW,hH,hNodes=[],hEdges=[],heartRaf;
+
+function hp(t,sc){
+  const x=16*Math.pow(Math.sin(t),3);
+  const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+  return{x:x*sc,y:y*sc};
+}
+function buildHeart(){
+  hW=hCan.width=window.innerWidth; hH=hCan.height=window.innerHeight;
+  const cx=hW/2, cy=hH*.42, sc=Math.min(hW,hH)*.022;
+  hNodes=[];hEdges=[];
+  for(let i=0;i<80;i++){
+    const t=(i/80)*Math.PI*2, pt=hp(t,sc);
+    hNodes.push({x:cx+pt.x+(Math.random()-.5)*sc*.55,y:cy+pt.y+(Math.random()-.5)*sc*.55,
+      ox:cx+pt.x,oy:cy+pt.y,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,
+      ph:Math.random()*Math.PI*2,r:2+Math.random()*2.4});
+  }
+  for(let i=0;i<40;i++){
+    const t=Math.random()*Math.PI*2,fr=.08+Math.random()*.84,pt=hp(t,sc*fr);
+    hNodes.push({x:cx+pt.x,y:cy+pt.y,ox:cx+pt.x,oy:cy+pt.y,
+      vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,
+      ph:Math.random()*Math.PI*2,r:1+Math.random()*1.7});
+  }
+  const mxD=sc*2.3;
+  for(let i=0;i<hNodes.length;i++) for(let j=i+1;j<hNodes.length;j++){
+    const dx=hNodes[i].ox-hNodes[j].ox,dy=hNodes[i].oy-hNodes[j].oy;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<mxD) hEdges.push({a:i,b:j,d});
+  }
+}
+let hT=0;
+function drawHeart(){
+  hCtx.clearRect(0,0,hW,hH); hT+=.013;
+  const gp=(Math.sin(hT*1.2)+1)/2;
+  for(const e of hEdges){
+    const na=hNodes[e.a],nb=hNodes[e.b];
+    const al=Math.max(0,1-(e.d/(Math.min(hW,hH)*.065)));
+    const g=hCtx.createLinearGradient(na.x,na.y,nb.x,nb.y);
+    g.addColorStop(0,`rgba(255,45,120,${al*.52+gp*.14})`);
+    g.addColorStop(1,`rgba(255,110,180,${al*.33+gp*.09})`);
+    hCtx.save();hCtx.strokeStyle=g;hCtx.lineWidth=.8+gp*.5;
+    hCtx.shadowColor='#ff2d78';hCtx.shadowBlur=6+gp*8;
+    hCtx.beginPath();hCtx.moveTo(na.x,na.y);hCtx.lineTo(nb.x,nb.y);hCtx.stroke();hCtx.restore();
+  }
+  for(const n of hNodes){
+    n.ph+=.038;const p=(Math.sin(n.ph)+1)/2;const r=n.r*(1+p*.48);
+    n.x+=n.vx;n.y+=n.vy;n.vx+=(n.ox-n.x)*.012;n.vy+=(n.oy-n.y)*.012;n.vx*=.965;n.vy*=.965;
+    hCtx.save();hCtx.shadowColor='#ff6eb4';hCtx.shadowBlur=10+p*14;
+    hCtx.fillStyle=`rgba(255,${108+p*62},${155+p*45},${.78+p*.22})`;
+    hCtx.beginPath();hCtx.arc(n.x,n.y,r,0,Math.PI*2);hCtx.fill();hCtx.restore();
+  }
+}
+function loopHeart(){drawHeart();heartRaf=requestAnimationFrame(loopHeart);}
+
+/* ═══════════════════════════════════════════════════════
+   PARTICLE BURST
+═══════════════════════════════════════════════════════ */
+const pCan=document.getElementById('particle-canvas');
+const pCtx=pCan.getContext('2d');
+let parts=[],pActive=false;
+function initParts(){pCan.width=window.innerWidth;pCan.height=window.innerHeight;}
+function burst(cx,cy){
+  parts=[];
+  for(let i=0;i<240;i++){
+    const a=Math.random()*Math.PI*2,sp=1.8+Math.random()*8;
+    parts.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-Math.random()*3,
+      r:1.4+Math.random()*3.8,life:1,decay:.011+Math.random()*.019,
+      hue:318+Math.random()*44,heart:Math.random()<.22});
+  }
+}
+function drawParts(){
+  pCtx.clearRect(0,0,pCan.width,pCan.height);
+  let alive=false;
+  for(const p of parts){
+    if(p.life<=0)continue; alive=true;
+    p.x+=p.vx;p.y+=p.vy;p.vy+=.13;p.vx*=.98;p.vy*=.98;p.life-=p.decay;
+    pCtx.save();pCtx.globalAlpha=Math.max(0,p.life);
+    pCtx.shadowColor=`hsl(${p.hue},100%,76%)`;pCtx.shadowBlur=9;
+    if(p.heart){
+      pCtx.fillStyle=`hsl(${p.hue},100%,72%)`;
+      pCtx.font=`${p.r*4}px serif`;pCtx.textAlign='center';pCtx.textBaseline='middle';
+      pCtx.fillText('❤',p.x,p.y);
+    }else{
+      pCtx.fillStyle=`hsl(${p.hue},100%,70%)`;
+      pCtx.beginPath();pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);pCtx.fill();
+    }
+    pCtx.restore();
+  }
+  if(!alive&&pActive){pActive=false;pCan.classList.remove('active');}
+}
+function loopParts(){drawParts();requestAnimationFrame(loopParts);}
+
+/* ═══════════════════════════════════════════════════════
+   QUIZ PHASE LOGIC
+═══════════════════════════════════════════════════════ */
+const QUESTIONS=[
+  {q:'مين حبوبتي؟🙈❤️‍🔥❤️‍🔥',
+   a:'أنا🤭❤️‍🔥❤️‍🔥💋',b:'ما بعرف 🫣🫣',
+   a3:'أنا و أنا و أنا نونتي 🙈❤️‍🔥❤️‍🔥❤️‍🔥'},
+  {q:'مين نونتي حبيبةعمري؟🤭🤭❤️‍🔥',
+   a:'أنا🤭❤️‍🔥❤️‍🔥💋',b:'ما بعرف 🫣🫣',
+   a3:'أنا و أنا و أنا نونتي وبس🙈❤️‍🔥❤️‍🔥❤️‍🔥'},
+  {q:'مين يلي راح اتزوجها و احبها و هي حقتي انا و بس و نونتي و دلوعتي؟🙈🤭🤭🤭🤭❤️‍🔥',
+   a:'أنا🤭❤️‍🔥❤️‍🔥💋',b:'ما بعرف 🫣🫣',
+   a3:'نونتي و نونتي و نونتي و بس يا قلب نونتي انت🙈❤️‍🔥❤️‍🔥❤️‍🔥'},
+];
+
+let qIdx=0, bClicks=0;
+const qEl=document.getElementById('quiz-q');
+const btnA=document.getElementById('btn-a');
+const btnB=document.getElementById('btn-b');
+const btnRow=document.getElementById('btn-row');
+const quizCard=document.getElementById('quiz-card');
+
+// Scale tracking relative to initial flex:1
+// We'll track "units" of flex-grow
+let aFlex=1, bFlex=1;
+
+function loadQuestion(i){
+  const q=QUESTIONS[i];
+  qEl.textContent=q.q;
+  btnA.textContent=q.a;
+  btnB.textContent=q.b;
+  btnB.style.display='';
+  // Reset flex sizes
+  aFlex=1; bFlex=1;
+  btnA.style.flex='1 1 0';
+  btnB.style.flex='1 1 0';
+  btnA.style.transform='';
+  btnB.style.transform='';
+  btnA.classList.remove('correct');
+  btnB.disabled=false;
+  bClicks=0;
+  // Re-animate card
+  quizCard.style.animation='none';
+  void quizCard.offsetWidth;
+  quizCard.style.animation='cardIn .5s ease both';
+}
+
+function handleBClick(){
+  bClicks++;
+  const q=QUESTIONS[qIdx];
+  if(bClicks===1){
+    // B shrinks 30%, A grows 30%
+    aFlex=1.3; bFlex=0.7;
+    btnA.style.flex=`${aFlex} 1 0`;
+    btnB.style.flex=`${bFlex} 1 0`;
+    btnA.textContent='🙈😝❤️‍🔥أناااا❤️‍🔥😝🙈';
+  } else if(bClicks===2){
+    // B shrinks another 30% (0.4), A grows another 30% (1.6)
+    aFlex=1.6; bFlex=0.4;
+    btnA.style.flex=`${aFlex} 1 0`;
+    btnB.style.flex=`${bFlex} 1 0`;
+  } else if(bClicks>=3){
+    // B disappears, A takes 100%
+    btnB.style.display='none';
+    btnA.style.flex='1 0 100%';
+    btnA.textContent=q.a3;
+  }
+}
+
+function handleAClick(){
+  btnA.classList.add('correct');
+  btnB.disabled=true;
+  setTimeout(()=>{
+    // Fade out card with blur
+    quizCard.style.transition='opacity .7s ease, filter .7s ease, transform .7s ease';
+    quizCard.style.opacity='0';
+    quizCard.style.filter='blur(8px)';
+    quizCard.style.transform='scale(.96)';
+    setTimeout(()=>{
+      if(qIdx<QUESTIONS.length-1){
+        qIdx++;
+        quizCard.style.opacity='';quizCard.style.filter='';quizCard.style.transform='';quizCard.style.transition='';
+        loadQuestion(qIdx);
+      } else {
+        // All done — move to praise
+        goPraise();
+      }
+    },720);
+  },500);
+}
+
+btnA.addEventListener('click',handleAClick);
+btnB.addEventListener('click',handleBClick);
+
+/* ═══════════════════════════════════════════════════════
+   PHASE 2: PRAISE
+═══════════════════════════════════════════════════════ */
+function goPraise(){
+  hidePhase('phase-quiz',()=>{
+    showPhase('phase-praise');
+    const l1=document.getElementById('pl1'),l2=document.getElementById('pl2');
+    l1.classList.remove('in');l2.classList.remove('in');
+    setTimeout(()=>l1.classList.add('in'),200);
+    setTimeout(()=>l2.classList.add('in'),900);
+    // After 3.5s display, fade out and go to lock
+    setTimeout(()=>{
+      const pp=document.getElementById('phase-praise');
+      pp.style.transition='opacity 1s ease';
+      pp.style.opacity='0';
+      setTimeout(()=>{
+        pp.style.opacity='';pp.style.transition='';
+        l1.classList.remove('in');l2.classList.remove('in');
+        goLock();
+      },1050);
+    },3500);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PHASE 3: LOCK
+═══════════════════════════════════════════════════════ */
+function goLock(){
+  hidePhase('phase-praise',()=>{
+    buildHeart(); loopHeart();
+    showPhase('phase-lock');
+    resetDials();
+    locked=true;
+  });
+}
+
+// DIAL LOGIC
+const CODE=[1,5,7];
+let dials=[0,0,0];
+const dEls=['d0','d1','d2'].map(id=>document.getElementById(id));
+const lBody=document.getElementById('lock-body');
+const shackle=document.getElementById('shackle');
+let locked=true;
+
+function resetDials(){
+  dials=[0,0,0];
+  dEls.forEach((el,i)=>{el.textContent=0;});
+  shackle.classList.remove('open');
+}
+
+function spinDial(idx,dir){
+  if(!locked)return;
+  dials[idx]=(dials[idx]+(dir==='up'?1:-1)+10)%10;
+  const el=dEls[idx];
+  el.textContent=dials[idx];
+  el.classList.remove('spinning');void el.offsetWidth;el.classList.add('spinning');
+  el.addEventListener('animationend',()=>el.classList.remove('spinning'),{once:true});
+}
+
+function tryUnlock(){
+  if(!locked)return;
+  if(dials[0]===CODE[0]&&dials[1]===CODE[1]&&dials[2]===CODE[2]){
+    doUnlock();
+  } else {
+    lBody.classList.remove('shake');void lBody.offsetWidth;lBody.classList.add('shake');
+    dEls.forEach(el=>{
+      el.classList.add('wrong');
+      el.addEventListener('animationend',()=>el.classList.remove('wrong'),{once:true});
+    });
+    lBody.addEventListener('animationend',()=>{
+      lBody.classList.remove('shake');
+      dials=[0,0,0];dEls.forEach((el,i)=>el.textContent=0);
+    },{once:true});
+  }
+}
+
+document.querySelectorAll('.dial-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>spinDial(+btn.dataset.dial,btn.dataset.dir));
+});
+document.getElementById('unlock-btn').addEventListener('click',tryUnlock);
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('phase-lock').classList.contains('active')){
+    if(!locked)return;
+    if(e.key==='Enter'){tryUnlock();return;}
+  }
+});
+
+function doUnlock(){
+  locked=false;
+  shackle.classList.add('open');
+  const rc=lBody.getBoundingClientRect();
+  const cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;
+  setTimeout(()=>{
+    pCan.classList.add('active');initParts();burst(cx,cy);pActive=true;
+  },480);
+  setTimeout(()=>{
+    document.getElementById('phase-lock').classList.remove('active');
+    cancelAnimationFrame(heartRaf);
+  },750);
+  setTimeout(()=>{
+    document.getElementById('stars').classList.add('on');
+    buildStars();loopStars();
+    showPhase('phase-final');
+    document.getElementById('reset-btn').classList.add('visible');
+  },1250);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════════════ */
+document.getElementById('reset-btn').addEventListener('click',()=>{
+  // Hide everything, reset state
+  document.querySelectorAll('.phase').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  document.getElementById('reset-btn').classList.remove('visible');
+  document.getElementById('stars').classList.remove('on');
+  // Cancel any heart loop
+  if(heartRaf)cancelAnimationFrame(heartRaf);
+  // Reset quiz
+  qIdx=0; bClicks=0;
+  loadQuestion(0);
+  // Short delay then show quiz
+  setTimeout(()=>showPhase('phase-quiz'),200);
+});
+
+/* ═══════════════════════════════════════════════════════
+   RESIZE
+═══════════════════════════════════════════════════════ */
+let rTimer;
+window.addEventListener('resize',()=>{
+  clearTimeout(rTimer);
+  rTimer=setTimeout(()=>{
+    buildStars();initParts();
+    if(document.getElementById('phase-lock').classList.contains('active')) buildHeart();
+  },130);
+});
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+// All phases hidden initially except quiz
+document.querySelectorAll('.phase').forEach(p=>p.style.display='none');
+loadQuestion(0);
+initParts();loopParts();
+buildStars();loopStars();
+// Show phase 1
+showPhase('phase-quiz');
+
+})();
+</script>
+</body>
+</html>
