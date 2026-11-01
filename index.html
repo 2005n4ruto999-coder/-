@@ -495,6 +495,48 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;
 .grad-msg{max-width:640px;margin:12px auto 0;font-size:clamp(1rem,3.3vw,1.3rem)}
 
 @media(max-height:760px) and (orientation:portrait){#lock-widget{top:23%}}
+#day-box,#grad-box,#mushaf,#st-album{scroll-margin-top:64px}
+/* lock greeting */
+#lock-label{direction:rtl!important;text-transform:none;letter-spacing:0;text-align:center;line-height:1.7;
+  font-size:clamp(.92rem,3.4vw,1.15rem);color:#fff;text-shadow:0 0 14px var(--pinkG),0 0 30px rgba(255,45,120,.5);margin-bottom:34px}
+@media(max-height:560px) and (orientation:landscape){#lock-label{font-size:.85rem;margin-bottom:30px;line-height:1.5}}
+/* where do you want to go */
+#go-btn{
+  position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;z-index:250;
+  transform:translate(-50%,-12px);opacity:0;pointer-events:none;filter:blur(6px);
+  padding:9px 18px;border-radius:50px;cursor:pointer;white-space:nowrap;direction:rtl;
+  font:600 clamp(.8rem,2.6vw,.95rem) 'Segoe UI',system-ui,sans-serif;color:#fff;
+  background:rgba(20,0,10,.45);border:1px solid rgba(255,170,210,.5);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 0 18px rgba(255,45,120,.35);transition:opacity 1.2s ease,transform 1.2s ease,filter 1.2s ease,box-shadow .3s}
+#go-btn.visible{opacity:.92;pointer-events:auto;transform:translate(-50%,0);filter:none}
+#go-btn:hover{box-shadow:0 0 30px rgba(255,45,120,.7)}
+#go{position:fixed;inset:0;z-index:350;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .55s ease;
+  background:radial-gradient(120% 90% at 50% 20%,#ff5d9e 0%,#c2185b 35%,#5a0a33 70%,#22031a 100%);overflow:hidden}
+#go.open{opacity:1}
+#go-hearts{position:absolute;inset:0;overflow:hidden}
+.fh{position:absolute;bottom:-60px;line-height:1;pointer-events:none;animation:fhUp linear forwards;filter:drop-shadow(0 0 8px rgba(255,150,200,.6))}
+.fh.shape{width:var(--s);height:var(--s);background:var(--c);animation-name:fhUpS}
+.fh.shape::before,.fh.shape::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:var(--c)}
+.fh.shape::before{left:-50%;top:0}.fh.shape::after{top:-50%;left:0}
+@keyframes fhUp{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:.95}
+  50%{transform:translate(calc(var(--x)*-.6),-55vh) rotate(var(--r))}100%{transform:translate(var(--x),-115vh) rotate(calc(var(--r)*-1));opacity:0}}
+@keyframes fhUpS{0%{transform:translate(0,0) rotate(45deg);opacity:0}10%{opacity:.9}
+  100%{transform:translate(var(--x),-115vh) rotate(calc(45deg + var(--r)));opacity:0}}
+.go-card{position:relative;z-index:2;width:min(560px,92vw);max-height:88vh;overflow:auto;padding:clamp(22px,5vw,34px);border-radius:28px;direction:rtl;text-align:center;
+  background:rgba(40,0,22,.42);border:1px solid rgba(255,200,225,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 20px 70px rgba(0,0,0,.45);transform:scale(.92);transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+#go.open .go-card{transform:none}
+.go-title{color:#fff;font-size:clamp(1.4rem,5vw,2rem);margin:6px 0 clamp(16px,4vw,24px);text-shadow:0 0 20px rgba(255,200,230,.8)}
+.go-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(8px,2vw,12px)}
+.go-item{display:flex;align-items:center;gap:10px;justify-content:flex-start;padding:14px;border-radius:18px;cursor:pointer;
+  font-size:1.35rem;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,220,235,.3);direction:rtl;
+  transition:background .25s,transform .25s,box-shadow .25s}
+.go-item span{font:600 clamp(.85rem,2.8vw,1rem) 'Segoe UI',system-ui,sans-serif}
+.go-item:hover{background:rgba(255,255,255,.2);box-shadow:0 0 22px rgba(255,150,200,.5);transform:translateY(-2px)}
+.go-item:active{transform:scale(.97)}
+#go-x{position:absolute;top:12px;left:12px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.25);color:#fff;cursor:pointer}
+@media(min-width:700px){.go-grid{grid-template-columns:repeat(4,1fr)}.go-item{flex-direction:column;justify-content:center;font-size:1.8rem}.go-card{width:min(760px,90vw)}}
 /* ══ DEVICE POLISH (iPhone / iPad / desktop) ══ */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -554,7 +596,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
   <canvas id="heart-canvas"></canvas>
   <div id="heart-text">I love you, Rawan</div>
   <div id="lock-widget">
-    <div id="lock-label">Enter the code</div>
+    <div id="lock-label">اهلا بملكة عالمي 🥹🙈❤️‍🔥💋💋<br>اشتقتلك فينك عني 🙈❤️‍🔥💋</div>
     <div class="lock-body" id="lock-body">
       <div class="lock-shackle" id="shackle"></div>
       <div class="dial-wrap">
@@ -562,7 +604,6 @@ img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
         <div class="dial-digit" id="d0">0</div>
         <button class="dial-btn" data-dial="0" data-dir="down">▼</button>
       </div>
-      <div class="dial-dot">·</div>
       <div class="dial-wrap">
         <button class="dial-btn" data-dial="1" data-dir="up">▲</button>
         <div class="dial-digit" id="d1">0</div>
@@ -573,6 +614,11 @@ img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
         <button class="dial-btn" data-dial="2" data-dir="up">▲</button>
         <div class="dial-digit" id="d2">0</div>
         <button class="dial-btn" data-dial="2" data-dir="down">▼</button>
+      </div>
+      <div class="dial-wrap">
+        <button class="dial-btn" data-dial="3" data-dir="up">▲</button>
+        <div class="dial-digit" id="d3">0</div>
+        <button class="dial-btn" data-dial="3" data-dir="down">▼</button>
       </div>
     </div>
     <button id="unlock-btn">Unlock ❤️</button>
@@ -608,6 +654,24 @@ img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
 <div class="env" id="env-dark"></div>
 <canvas id="snowfall"></canvas>
 
+<button id="go-btn">فين بدك تروحي؟🙈🙈❤️‍🔥💋💋</button>
+<div id="go">
+  <div id="go-hearts"></div>
+  <div class="go-card">
+    <button id="go-x" aria-label="close">✕</button>
+    <div class="go-title hand">فين بدك تروحي؟🙈🙈❤️‍🔥💋💋</div>
+    <div class="go-grid">
+      <button class="go-item" data-go="final">💌<span>رسالتي إلك</span></button>
+      <button class="go-item" data-go="snow">❄️<span>يوم الثلج</span></button>
+      <button class="go-item" data-go="wine">🧣<span>هدية ميكاسا</span></button>
+      <button class="go-item" data-go="st-album">📸<span>ألبومنا</span></button>
+      <button class="go-item" data-go="day-box">🌹<span>أول ورد لوردتي</span></button>
+      <button class="go-item" data-go="grad-box">🎓<span>يوم تخرجك</span></button>
+      <button class="go-item" data-go="mushaf">📖<span>عشانك يا روان</span></button>
+      <button class="go-item" data-go="start">🔐<span>من الأول</span></button>
+    </div>
+  </div>
+</div>
 <div id="phase-new">
   <section class="stage" id="st-snow">
     <div class="glass msgbox">
@@ -1119,15 +1183,15 @@ function goLock(){
 }
 
 // DIAL LOGIC
-const CODE=[1,5,7];
-let dials=[0,0,0];
-const dEls=['d0','d1','d2'].map(id=>document.getElementById(id));
+const CODE=[1,7,1,1];
+let dials=[0,0,0,0];
+const dEls=['d0','d1','d2','d3'].map(id=>document.getElementById(id));
 const lBody=document.getElementById('lock-body');
 const shackle=document.getElementById('shackle');
 let locked=true;
 
 function resetDials(){
-  dials=[0,0,0];
+  dials=[0,0,0,0];
   dEls.forEach((el,i)=>{el.textContent=0;});
   shackle.classList.remove('open');
 }
@@ -1143,7 +1207,7 @@ function spinDial(idx,dir){
 
 function tryUnlock(){
   if(!locked)return;
-  if(dials[0]===CODE[0]&&dials[1]===CODE[1]&&dials[2]===CODE[2]){
+  if(dials.every((v,i)=>v===CODE[i])){
     doUnlock();
   } else {
     lBody.classList.remove('shake');void lBody.offsetWidth;lBody.classList.add('shake');
@@ -1153,7 +1217,7 @@ function tryUnlock(){
     });
     lBody.addEventListener('animationend',()=>{
       lBody.classList.remove('shake');
-      dials=[0,0,0];dEls.forEach((el,i)=>el.textContent=0);
+      dials=[0,0,0,0];dEls.forEach((el,i)=>el.textContent=0);
     },{once:true});
   }
 }
@@ -1189,6 +1253,7 @@ function doUnlock(){
     document.getElementById('reset-btn').classList.add('visible');
     clearTimeout(window.__nbT);
     window.__nbT=setTimeout(()=>document.getElementById('new-btn').classList.add('visible'),4200);
+    setTimeout(()=>document.getElementById('go-btn').classList.add('visible'),2500);
   },1250);
 }
 
@@ -1254,10 +1319,11 @@ function swapPhotos(list,op){
   photoBg.querySelectorAll('.pb').forEach(p=>{p.style.transition='opacity 1.2s ease';p.style.opacity='0';setTimeout(()=>p.remove(),1300);});
   for(let i=0;i<6;i++)setTimeout(spawnPhoto,500+i*500);
 }
-function reveal(btn,delay){
-  return wait(delay).then(()=>{btn.classList.add('m1');return wait(1400);})
-    .then(()=>{btn.classList.add('m2');return wait(1500);})
-    .then(()=>btn.classList.add('m3'));
+function reveal(btn,delay,g){
+  const ok=()=>g===undefined||g===gen;
+  return wait(delay).then(()=>{if(!ok())throw 0;btn.classList.add('m1');return wait(1400);})
+    .then(()=>{if(!ok())throw 0;btn.classList.add('m2');return wait(1500);})
+    .then(()=>{if(ok())btn.classList.add('m3');}).catch(()=>{});
 }
 
 /* snowfall */
@@ -1273,47 +1339,121 @@ function loopSnow(){
   requestAnimationFrame(loopSnow);
 }
 
-/* enter */
-$('new-btn').addEventListener('click',()=>{
-  $('new-btn').classList.remove('visible');
-  $('reset-btn').classList.remove('visible');
-  $('stars').classList.remove('on');
+/* ── navigation state (so "فين بدك تروحي" can jump anywhere) ── */
+let gen=0;
+const MB=['m1','m2','m3','gone'];
+function resetBtn(b){b.classList.remove(...MB);}
+function snowFx(on){
+  if(on){if(!snOn){buildSnow();snOn=true;loopSnow();}$('snowfall').classList.add('on');}
+  else{$('snowfall').classList.remove('on');setTimeout(()=>{if(!$('snowfall').classList.contains('on'))snOn=false;},2100);}
+}
+function enterWorld(){
+  $('new-btn').classList.remove('visible');$('reset-btn').classList.remove('visible');$('stars').classList.remove('on');
+  document.querySelectorAll('.phase').forEach(p=>{if(p.classList.contains('active')){p.classList.remove('active');setTimeout(()=>{if(!p.classList.contains('active'))p.style.display='none';},950);}});
   document.body.style.background='transparent';
-  hidePhase('phase-final');
-  setEnv('snow');
-  swapPhotos(SNOW_IMGS,1.25);
-  buildSnow();snOn=true;loopSnow();$('snowfall').classList.add('on');
-  pn.style.display='block';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>pn.classList.add('active')));
-  setTimeout(()=>$('sn1').classList.add('in'),900);
-  setTimeout(()=>$('sn2').classList.add('in'),5900);
-  reveal($('btn-after'),15900);
-});
-
-/* snow → wine */
-$('btn-after').addEventListener('click',async()=>{
-  const b=$('btn-after');b.classList.add('gone');
-  $('st-snow').classList.add('leave');
-  setEnv('wine');$('snowfall').classList.remove('on');
-  swapPhotos(IMGS,.8);
-  await wait(1000);
-  snOn=false;$('st-snow').style.display='none';
-  $('st-wine').style.display='flex';pn.scrollTop=0;
-  await wait(300);$('mikasa').classList.add('in');
-  await wait(2200);$('wn1').classList.add('in');
-  await wait(1800);$('wn2').classList.add('in');
-  await wait(1800);$('wn3').classList.add('in');
-  reveal($('btn-show'),2200);
-});
-
-/* wine → album */
+  if(pn.style.display!=='block'){pn.style.display='block';requestAnimationFrame(()=>requestAnimationFrame(()=>pn.classList.add('active')));}
+}
+function leaveWorld(){
+  pn.classList.remove('active');setTimeout(()=>{if(!pn.classList.contains('active'))pn.style.display='none';},1200);
+  snowFx(false);setEnv('');document.body.style.background='';
+}
+function goSnow(fast){
+  const g=++gen;enterWorld();setEnv('snow');swapPhotos(SNOW_IMGS,1.25);snowFx(true);
+  $('st-snow').classList.remove('leave');$('st-snow').style.display='flex';
+  $('st-wine').style.display='none';$('st-album').style.display='none';pn.scrollTop=0;
+  ['sn1','sn2'].forEach(i=>$(i).classList.remove('in'));resetBtn($('btn-after'));
+  const t=fast?[300,1100,1900]:[900,5900,15900];
+  setTimeout(()=>{if(g===gen)$('sn1').classList.add('in');},t[0]);
+  setTimeout(()=>{if(g===gen)$('sn2').classList.add('in');},t[1]);
+  reveal($('btn-after'),t[2],g);
+}
+function showWine(g,fast){
+  enterWorld();setEnv('wine');snowFx(false);swapPhotos(IMGS,.8);
+  $('st-snow').style.display='none';$('st-wine').style.display='flex';
+  if(fast){$('mikasa').classList.add('in');['wn1','wn2','wn3'].forEach(i=>$(i).classList.add('in'));}
+}
+function goWine(fast){
+  const g=++gen;
+  ['wn1','wn2','wn3'].forEach(i=>$(i).classList.remove('in'));$('mikasa').classList.remove('in');
+  resetBtn($('btn-show'));$('st-album').style.display='none';
+  showWine(g,false);pn.scrollTop=0;
+  const steps=fast?[200,500,800,1100,1400]:[300,2200,1800,1800,2200];
+  (async()=>{
+    await wait(steps[0]);if(g!==gen)return;$('mikasa').classList.add('in');
+    await wait(steps[1]);if(g!==gen)return;$('wn1').classList.add('in');
+    await wait(steps[2]);if(g!==gen)return;$('wn2').classList.add('in');
+    await wait(steps[3]);if(g!==gen)return;$('wn3').classList.add('in');
+    reveal($('btn-show'),steps[4],g);
+  })();
+}
 let built=false;
-$('btn-show').addEventListener('click',()=>{
+function goAlbum(target){
+  const g=++gen;showWine(g,true);
   $('btn-show').classList.add('gone');
   if(!built){buildAlbum();built=true;}
-  const s=$('st-album');s.style.display='block';
-  setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'start'}),250);
+  $('st-album').style.display='block';
+  setTimeout(()=>{if(g!==gen)return;const el=$(target)||$('st-album');
+    el.scrollIntoView({behavior:'smooth',block:'start'});},350);
+}
+function goFinal(){
+  ++gen;leaveWorld();swapPhotos(IMGS,1);
+  hidePhase('phase-lock');
+  $('stars').classList.add('on');showPhase('phase-final');
+  $('reset-btn').classList.add('visible');
+  clearTimeout(window.__nbT);window.__nbT=setTimeout(()=>$('new-btn').classList.add('visible'),1500);
+}
+function goStart(){
+  ++gen;leaveWorld();swapPhotos(IMGS,1);
+  $('go-btn').classList.remove('visible');
+  $('reset-btn').click();
+}
+
+/* story flow */
+$('new-btn').addEventListener('click',()=>goSnow(false));
+$('btn-after').addEventListener('click',async()=>{
+  const g=gen;$('btn-after').classList.add('gone');$('st-snow').classList.add('leave');
+  setEnv('wine');snowFx(false);
+  await wait(1000);if(g!==gen)return;
+  goWine(false);
 });
+$('btn-show').addEventListener('click',()=>goAlbum('st-album'));
+
+/* ── "فين بدك تروحي؟" menu with floating hearts ── */
+const goEl=$('go'),goHearts=$('go-hearts');let heartTimer=null;
+const HEARTS=['❤️','💖','💕','💗','💓','💘','💝','💞','❤️‍🔥','🩷','💜','🤍'];
+function spawnHeart(){
+  const h=document.createElement('span');
+  const css=Math.random()<.3;
+  h.className='fh'+(css?' shape':'');
+  if(!css)h.textContent=HEARTS[(Math.random()*HEARTS.length)|0];
+  else h.style.setProperty('--c',`hsl(${320+Math.random()*45},95%,${60+Math.random()*20}%)`);
+  const s=14+Math.random()*34,d=7+Math.random()*7;
+  h.style.left=Math.random()*100+'%';h.style.fontSize=s+'px';
+  h.style.setProperty('--s',s+'px');h.style.setProperty('--x',(Math.random()-.5)*160+'px');
+  h.style.setProperty('--r',(Math.random()-.5)*70+'deg');
+  h.style.animationDuration=d+'s';
+  goHearts.appendChild(h);setTimeout(()=>h.remove(),d*1000+100);
+}
+function openGo(){
+  goEl.style.display='flex';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>goEl.classList.add('open')));
+  for(let i=0;i<16;i++)setTimeout(spawnHeart,i*120);
+  heartTimer=setInterval(spawnHeart,260);
+}
+function closeGo(){
+  goEl.classList.remove('open');clearInterval(heartTimer);
+  setTimeout(()=>{if(!goEl.classList.contains('open')){goEl.style.display='none';goHearts.innerHTML='';}},600);
+}
+$('go-btn').addEventListener('click',openGo);
+$('go-x').addEventListener('click',closeGo);
+goEl.addEventListener('click',e=>{if(e.target===goEl||e.target===goHearts)closeGo();});
+document.querySelectorAll('.go-item').forEach(b=>b.addEventListener('click',()=>{
+  const k=b.dataset.go;closeGo();
+  setTimeout(()=>{
+    if(k==='final')goFinal();else if(k==='snow')goSnow(true);else if(k==='wine')goWine(true);
+    else if(k==='start')goStart();else goAlbum(k);
+  },350);
+}));
 
 /* album */
 const io=new IntersectionObserver(es=>es.forEach(e=>{
@@ -1337,7 +1477,7 @@ function buildAlbum(){
     if(it.s){
       if(!box){
         box=document.createElement('div');box.className='day-box';box.id='day-box';
-        box.innerHTML='<div class="day-head"><div class="dt">17 · 11 · 2025</div><div class="sub hand">اليوم اللي ما بينتسى 🥹🤍❤️‍🔥</div></div><div class="grid"></div>';
+        box.innerHTML='<div class="day-head"><div class="dt hand" style="letter-spacing:0">أول ورد لوردتي 🥹🙈❤️‍🔥❤️‍🔥</div><div class="sub hand">اليوم اللي ما بينتسى 🥹🤍❤️‍🔥</div></div><div class="grid"></div>';
         g.appendChild(box);
       }
       box.querySelector('.grid').appendChild(tile(it,i));
