@@ -1759,11 +1759,11 @@ window.addEventListener('resize',()=>{if(snOn)buildSnow();});
 let navOpen=false;   // shown only after reaching the very end in this visit — never remembered
 try{localStorage.removeItem('rawanNav');}catch(e){}
 const endIO=new IntersectionObserver(es=>es.forEach(e=>{
-  if(!e.isIntersecting)return;
+  if(!e.isIntersecting||!pn.classList.contains('active')||$('st-album').style.display!=='block')return;
   navOpen=true;
   setTimeout(()=>$('go-btn').classList.add('visible'),1800);endIO.disconnect();
-}),{root:pn,threshold:.6});
-endIO.observe($('more'));
+}),{root:pn,threshold:.25});
+endIO.observe($('gift'));
 
 /* ═══ rising red / pink / fire hearts ═══ */
 const upEl=$('hearts-up');let upT=null;
