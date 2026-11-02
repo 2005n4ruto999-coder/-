@@ -1756,12 +1756,11 @@ $('rd-x').onclick=closeRd;
 window.addEventListener('resize',()=>{if(snOn)buildSnow();});
 
 /* ═══ nav button: appears at the very end the first time, then everywhere ═══ */
-let navOpen=false;
-try{navOpen=localStorage.getItem('rawanNav')==='1';}catch(e){}
-if(navOpen)setTimeout(()=>$('go-btn').classList.add('visible'),1200);
+let navOpen=false;   // shown only after reaching the very end in this visit — never remembered
+try{localStorage.removeItem('rawanNav');}catch(e){}
 const endIO=new IntersectionObserver(es=>es.forEach(e=>{
   if(!e.isIntersecting)return;
-  navOpen=true;try{localStorage.setItem('rawanNav','1');}catch(err){}
+  navOpen=true;
   setTimeout(()=>$('go-btn').classList.add('visible'),1800);endIO.disconnect();
 }),{root:pn,threshold:.6});
 endIO.observe($('more'));
