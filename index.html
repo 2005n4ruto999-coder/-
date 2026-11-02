@@ -540,6 +540,52 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;
   50%{transform:translate(calc(var(--x)*-.5),var(--y)) rotate(-6deg)}75%{transform:translate(calc(var(--x)*-1),calc(var(--y)*-.4)) rotate(12deg)}100%{transform:translate(calc(var(--x)*.6),calc(var(--y)*.8)) rotate(-4deg)}}
 @keyframes ghBeat{0%,100%{transform:scale(1);opacity:.55}15%{transform:scale(1.25);opacity:.95}30%{transform:scale(1)}45%{transform:scale(1.15);opacity:.85}}
 
+/* ══ LOCK — prettier & lighter (no animated box-shadows) ══ */
+.lock-body{
+  background:linear-gradient(160deg,rgba(48,6,28,.94),rgba(16,0,9,.96) 55%,rgba(36,4,20,.95));
+  border:1.5px solid rgba(255,95,155,.75);border-radius:24px;gap:6px;
+  padding:clamp(14px,3vw,20px) clamp(14px,3.5vw,22px) clamp(18px,3.6vw,24px);
+  animation:none;isolation:isolate;
+  box-shadow:0 0 24px rgba(255,45,120,.42),0 0 60px rgba(255,45,120,.16),inset 0 1px 0 rgba(255,255,255,.1),inset 0 0 26px rgba(255,45,120,.08);
+}
+.lock-body::before{content:'';position:absolute;inset:1px;border-radius:22px;pointer-events:none;z-index:-1;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),transparent 40%)}
+.lock-body::after{content:'';position:absolute;inset:-8px;border-radius:32px;pointer-events:none;z-index:-2;
+  box-shadow:0 0 36px 4px rgba(255,45,120,.6);opacity:.25;animation:lockGlow 2.6s ease-in-out infinite}
+@keyframes lockGlow{50%{opacity:.85}}
+.lock-body.zap{border-color:#ffd0e6}
+.lock-shackle{border-width:5px;border-color:#ff4f93;width:50px;height:52px;top:-48px;
+  box-shadow:0 0 10px rgba(255,110,180,.8),inset 0 2px 4px rgba(255,255,255,.25)}
+.dial-wrap{gap:2px}
+.dial-btn{min-width:38px;min-height:30px;border-radius:10px;opacity:.85;font-size:clamp(11px,3.2vw,15px);
+  background:rgba(255,45,120,.08);transition:background .2s,opacity .2s,transform .15s}
+.dial-btn:hover{background:rgba(255,45,120,.2);opacity:1;transform:none}
+.dial-btn:active{transform:scale(.88);background:rgba(255,45,120,.3)}
+.dial-digit{
+  border:1px solid rgba(255,90,150,.55);border-radius:10px;
+  background:linear-gradient(180deg,#300818 0%,#1a020d 49%,#0e0007 51%,#22040f 100%);
+  box-shadow:inset 0 0 12px rgba(255,45,120,.12),0 4px 10px rgba(0,0,0,.45);
+  text-shadow:0 0 12px rgba(255,140,200,.9);perspective:200px}
+.dial-digit::before{top:50%!important;bottom:auto;height:1px;background:rgba(0,0,0,.65);box-shadow:0 1px 0 rgba(255,90,150,.18)}
+.dial-digit::after{top:0!important;bottom:50%!important;height:auto;background:linear-gradient(180deg,rgba(255,255,255,.07),transparent);box-shadow:none}
+.dial-digit.spinning{animation:flipD .22s ease-out}
+@keyframes flipD{0%{transform:rotateX(-80deg);opacity:.2}100%{transform:rotateX(0);opacity:1}}
+.dial-dash{margin:0 4px}
+.lock-heart{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);font-size:15px;line-height:1;
+  color:#ff4f93;text-shadow:0 0 8px rgba(255,79,147,.9);animation:hb 2.4s ease-in-out infinite}
+#unlock-btn{position:relative;overflow:hidden;border:none;color:#fff;font-weight:700;padding:12px 38px;
+  background:linear-gradient(135deg,#ff2d78,#ff6eb4);box-shadow:0 6px 22px rgba(255,45,120,.45)}
+#unlock-btn::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shineB 3.2s ease-in-out infinite}
+@keyframes shineB{0%,55%{left:-60%}85%,100%{left:130%}}
+#unlock-btn:hover{background:linear-gradient(135deg,#ff4589,#ff86c2);box-shadow:0 8px 30px rgba(255,45,120,.6)}
+/* phones: lighter glass + no blur on moving photos */
+@media(pointer:coarse){
+  .glass{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  #content-card{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .quiz-card{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .pb{filter:none!important}
+}
 /* lock greeting */
 #lock-label{direction:rtl!important;text-transform:none;letter-spacing:0;text-align:center;line-height:1.7;
   font-size:clamp(.92rem,3.4vw,1.15rem);color:#fff;text-shadow:0 0 14px var(--pinkG),0 0 30px rgba(255,45,120,.5);margin-bottom:34px}
@@ -643,6 +689,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
     <div id="lock-label">اهلا بملكة عالمي 🥹🙈❤️‍🔥💋💋<br>اشتقتلك فينك عني 🙈❤️‍🔥💋</div>
     <div class="lock-body" id="lock-body">
       <div class="lock-shackle" id="shackle"></div>
+      <div class="lock-heart">❤</div>
       <div class="dial-wrap">
         <button class="dial-btn" data-dial="0" data-dir="up">▲</button>
         <div class="dial-digit" id="d0">0</div>
@@ -887,7 +934,7 @@ function spawnPhoto(){
   img.style.left=sx+'px'; img.style.top=sy+'px';
   img.style.transform=`scale(.9) rotate(${(Math.random()-.5)*10}deg)`;
   // Start with small blur, end with ~2px (20% intensity)
-  img.style.filter=`blur(4px)`;
+  img.style.filter=`blur(2px)`;
   photoBg.appendChild(img);
 
   const dur=13000+Math.random()*10000;
@@ -895,11 +942,10 @@ function spawnPhoto(){
   const fScale=.82+Math.random()*.45, fRot=(Math.random()-.5)*18;
 
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    img.style.transition=`opacity 2s ease, transform ${dur}ms ease, filter ${dur}ms ease`;
+    img.style.transition=`opacity 2s ease, transform ${dur}ms linear`;
     img.style.opacity=((0.26+Math.random()*.14)*photoOp).toFixed(2);
     img.style.transform=`translate(${dx}px,${dy}px) scale(${fScale}) rotate(${fRot}deg)`;
     // Reduced blur final: 2px (light, ~20% intensity)
-    img.style.filter=`blur(2px)`;
   }));
 
   setTimeout(()=>{
@@ -911,7 +957,7 @@ function spawnPhoto(){
 function startPhotos(){
   if(photoTimer)return;
   for(let i=0;i<6;i++) setTimeout(spawnPhoto,i*650);
-  photoTimer=setInterval(spawnPhoto,2800);
+  photoTimer=setInterval(spawnPhoto,matchMedia('(pointer:coarse)').matches?3600:2800);
 }
 // Photos run from the very start across all phases
 startPhotos();
@@ -938,14 +984,27 @@ function drawStars(){
     sCtx.beginPath();sCtx.arc(s.x,s.y,s.r,0,Math.PI*2);sCtx.fill();
   }
 }
-function loopStars(){drawStars();requestAnimationFrame(loopStars);}
+let starsRaf=0;
+function loopStars(){if(!sCan.classList.contains('on')){starsRaf=0;sCtx.clearRect(0,0,sW,sH);return;}drawStars();starsRaf=requestAnimationFrame(loopStars);}
+function startStars(){if(!starsRaf)starsRaf=requestAnimationFrame(loopStars);}
+new MutationObserver(()=>{if(sCan.classList.contains('on'))startStars();}).observe(sCan,{attributes:true,attributeFilter:['class']});
 
 /* ═══════════════════════════════════════════════════════
-   NEURAL HEART  (canvas, phase 3 only)
+   NEURAL HEART  (canvas, phase 3 only) — light version:
+   no shadowBlur, batched strokes, sprite glow, adaptive quality
 ═══════════════════════════════════════════════════════ */
 const hCan=document.getElementById('heart-canvas');
 const hCtx=hCan.getContext('2d');
 let hW,hH,hNodes=[],hEdges=[],heartRaf;
+const COARSE=matchMedia('(pointer:coarse)').matches;
+let hQ=COARSE?1:2;                         // quality level (drops automatically if slow)
+// soft glow sprite, drawn once
+const SPR=document.createElement('canvas');SPR.width=SPR.height=64;
+(()=>{const c=SPR.getContext('2d'),g=c.createRadialGradient(32,32,0,32,32,32);
+  g.addColorStop(0,'rgba(255,240,248,1)');g.addColorStop(.18,'rgba(255,150,200,.95)');
+  g.addColorStop(.45,'rgba(255,45,120,.35)');g.addColorStop(1,'rgba(255,45,120,0)');
+  c.fillStyle=g;c.fillRect(0,0,64,64);})();
+function dot(x,y,s,a){hCtx.globalAlpha=a;hCtx.drawImage(SPR,x-s,y-s,s*2,s*2);}
 
 function hp(t,sc){
   const x=16*Math.pow(Math.sin(t),3);
@@ -954,36 +1013,34 @@ function hp(t,sc){
 }
 function buildHeart(){
   hW=window.innerWidth; hH=window.innerHeight;
-  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const dpr=Math.min(window.devicePixelRatio||1,hQ>=2?1.5:hQ===1?1.25:1);
   hCan.width=hW*dpr; hCan.height=hH*dpr; hCtx.setTransform(dpr,0,0,dpr,0,0);
   const land=hW>hH*1.3&&hH<560;
   const wide=!land&&hW>hH, tall=!land&&hH>=900&&hW<hH, short=!land&&!wide&&hH<760;
   const cx=land?hW*.28:hW/2, cy=land?hH*.5:wide?hH*.36:tall?hH*.38:short?hH*.36:hH*.42;
   const sc=land?hH*.026:wide?hH*.015:tall?Math.min(hW*.022,hH*.014):short?Math.min(hW*.021,hH*.0115):Math.min(hW,hH)*.022;
   const ht=document.getElementById('heart-text'); ht.style.top=land?'':(cy/hH*100)+'%';
+  const nOut=hQ>=2?80:hQ===1?64:48, nIn=hQ>=2?36:hQ===1?24:14;
   hNodes=[];hEdges=[];
-  for(let i=0;i<80;i++){
-    const t=(i/80)*Math.PI*2, pt=hp(t,sc);
-    hNodes.push({x:cx+pt.x+(Math.random()-.5)*sc*.55,y:cy+pt.y+(Math.random()-.5)*sc*.55,
-      ox:cx+pt.x,oy:cy+pt.y,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,
-      ph:Math.random()*Math.PI*2,r:2+Math.random()*2.4});
+  for(let i=0;i<nOut;i++){
+    const t=(i/nOut)*Math.PI*2, pt=hp(t,sc);
+    hNodes.push({x:cx+pt.x,y:cy+pt.y,ox:cx+pt.x,oy:cy+pt.y,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,
+      ph:Math.random()*Math.PI*2,r:2.2+Math.random()*2.2});
   }
-  for(let i=0;i<40;i++){
-    const t=Math.random()*Math.PI*2,fr=.08+Math.random()*.84,pt=hp(t,sc*fr);
-    hNodes.push({x:cx+pt.x,y:cy+pt.y,ox:cx+pt.x,oy:cy+pt.y,
-      vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,
-      ph:Math.random()*Math.PI*2,r:1+Math.random()*1.7});
+  for(let i=0;i<nIn;i++){
+    const t=Math.random()*Math.PI*2,fr=.1+Math.random()*.8,pt=hp(t,sc*fr);
+    hNodes.push({x:cx+pt.x,y:cy+pt.y,ox:cx+pt.x,oy:cy+pt.y,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,
+      ph:Math.random()*Math.PI*2,r:1.2+Math.random()*1.4});
   }
-  const mxD=sc*2.3;
+  const mxD=sc*2.3*(80/nOut);
   for(let i=0;i<hNodes.length;i++) for(let j=i+1;j<hNodes.length;j++){
     const dx=hNodes[i].ox-hNodes[j].ox,dy=hNodes[i].oy-hNodes[j].oy;
-    const d=Math.sqrt(dx*dx+dy*dy);
-    if(d<mxD) hEdges.push({a:i,b:j,d});
+    if(dx*dx+dy*dy<mxD*mxD) hEdges.push(i,j);
   }
   hCx=cx; hCy=cy;
-  const cnt=Math.round(Math.min(120,Math.max(48,hW*hH/12500)));
+  const cnt=Math.round(Math.min(hQ>=2?85:hQ===1?42:26,Math.max(20,hW*hH/(hQ>=2?14000:16000))));
   fNodes=Array.from({length:cnt},()=>({x:Math.random()*hW,y:Math.random()*hH,
-    vx:(Math.random()-.5)*.55,vy:(Math.random()-.5)*.55,r:1+Math.random()*1.7,ph:Math.random()*6.28,fl:0}));
+    vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:1.4+Math.random()*1.6,ph:Math.random()*6.28,fl:0}));
   pulses=[];
 }
 /* ── living neural network around the lock ── */
@@ -998,98 +1055,94 @@ function lockAnchors(){
     .map(([x,y])=>({x,y,r:2.6,ph:Math.random()*6.28,fl:0,anchor:1}));
 }
 let anchors=[],anchorT=0;
+const BK=[[],[],[]];   // edge buckets by strength
 function drawNet(){
-  const D=Math.max(90,Math.min(hW,hH)*.16), D2=D*D;
-  if(++anchorT%30===1)anchors=lockAnchors();
+  const D=Math.max(85,Math.min(hW,hH)*.16), D2=D*D;
+  if(++anchorT%40===1)anchors=lockAnchors();
   const pool=fNodes.concat(anchors), cand=[];
-  // move free nodes
   for(const n of fNodes){
     n.x+=n.vx;n.y+=n.vy;
     if(n.x<0||n.x>hW)n.vx*=-1; if(n.y<0||n.y>hH)n.vy*=-1;
-    const dx=ptr.x-n.x,dy=ptr.y-n.y,d=dx*dx+dy*dy;
-    if(d<28000){n.x+=dx*.006;n.y+=dy*.006;}
+    const dx=ptr.x-n.x,dy=ptr.y-n.y;
+    if(dx*dx+dy*dy<28000){n.x+=dx*.006;n.y+=dy*.006;}
   }
-  hCtx.lineWidth=.7;
+  BK[0].length=BK[1].length=BK[2].length=0;
   for(let i=0;i<pool.length;i++){
     const a=pool[i];
     for(let j=i+1;j<pool.length;j++){
       const b=pool[j];
       if(a.anchor&&b.anchor)continue;
+      const an=a.anchor||b.anchor,lim=an?D2*1.9:D2;
       const dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;
-      const lim=(a.anchor||b.anchor)?D2*1.9:D2;
       if(d<lim){
-        const al=(1-d/lim)*((a.anchor||b.anchor)?.55:.32);
-        hCtx.strokeStyle=`rgba(255,${90+((i*7)%60)},${170+((j*5)%60)},${al})`;
-        hCtx.beginPath();hCtx.moveTo(a.x,a.y);hCtx.lineTo(b.x,b.y);hCtx.stroke();
-        if(cand.length<400)cand.push(b.anchor?[a,b]:a.anchor?[b,a]:Math.random()<.5?[a,b]:[b,a]);
+        const k=an?2:d<lim*.35?1:0;BK[k].push(a.x,a.y,b.x,b.y);
+        if(cand.length<200)cand.push(b.anchor?[a,b]:a.anchor?[b,a]:[a,b]);
       }
     }
-    // links from free nodes into the heart
-    if(!a.anchor&&i%2===0){
+    if(!a.anchor&&i%2===0&&hNodes.length){
       const h=hNodes[(i*13+((hT*20)|0))%hNodes.length];
-      const dx=a.x-h.x,dy=a.y-h.y,d=dx*dx+dy*dy;
-      if(d<D2*1.4){
-        hCtx.strokeStyle=`rgba(255,110,180,${(1-d/(D2*1.4))*.3})`;
-        hCtx.beginPath();hCtx.moveTo(a.x,a.y);hCtx.lineTo(h.x,h.y);hCtx.stroke();
-        if(cand.length<400)cand.push([a,h]);
-      }
+      const dx=a.x-h.x,dy=a.y-h.y;
+      if(dx*dx+dy*dy<D2*1.4){BK[0].push(a.x,a.y,h.x,h.y);if(cand.length<200)cand.push([a,h]);}
     }
   }
-  // signals travelling along synapses
-  if(cand.length&&Math.random()<.22){
+  const strokeB=(arr,style,w)=>{if(!arr.length)return;hCtx.beginPath();
+    for(let k=0;k<arr.length;k+=4){hCtx.moveTo(arr[k],arr[k+1]);hCtx.lineTo(arr[k+2],arr[k+3]);}
+    hCtx.strokeStyle=style;hCtx.lineWidth=w;hCtx.stroke();};
+  hCtx.globalAlpha=1;
+  strokeB(BK[0],'rgba(255,120,200,.13)',.7);
+  strokeB(BK[1],'rgba(255,140,210,.30)',.8);
+  strokeB(BK[2],'rgba(255,90,160,.42)',.9);
+  if(cand.length&&Math.random()<.2){
     const e=cand[(Math.random()*cand.length)|0];
-    pulses.push({a:e[0],b:e[1],t:0,sp:.012+Math.random()*.022});
+    pulses.push({a:e[0],b:e[1],t:0,sp:.014+Math.random()*.022});
   }
-  hCtx.save();hCtx.shadowColor='#ff6eb4';hCtx.shadowBlur=12;
+  hCtx.globalCompositeOperation='lighter';
   for(let k=pulses.length-1;k>=0;k--){
     const p=pulses[k];p.t+=p.sp;
     if(p.t>=1){p.b.fl=1;pulses.splice(k,1);continue;}
-    const x=p.a.x+(p.b.x-p.a.x)*p.t,y=p.a.y+(p.b.y-p.a.y)*p.t;
-    hCtx.fillStyle=`rgba(255,220,240,${.9-p.t*.3})`;
-    hCtx.beginPath();hCtx.arc(x,y,1.9,0,Math.PI*2);hCtx.fill();
+    dot(p.a.x+(p.b.x-p.a.x)*p.t,p.a.y+(p.b.y-p.a.y)*p.t,6,.9-p.t*.3);
   }
   for(const n of pool){
     n.ph+=.03;n.fl*=.93;
     const g=(Math.sin(n.ph)+1)/2;
-    hCtx.fillStyle=`rgba(255,${150+g*70},${200+g*40},${.45+g*.3+n.fl*.5})`;
-    hCtx.beginPath();hCtx.arc(n.x,n.y,n.r*(1+n.fl*1.4),0,Math.PI*2);hCtx.fill();
+    dot(n.x,n.y,n.r*(2.2+n.fl*2.5),.35+g*.3+n.fl*.4);
   }
-  hCtx.restore();
+  hCtx.globalCompositeOperation='source-over';hCtx.globalAlpha=1;
   if(anchors.length&&anchors.some(a=>a.fl>.6))lBodyGlow();
 }
 let glowT=0;
 function lBodyGlow(){
-  const now=performance.now(); if(now-glowT<260)return; glowT=now;
+  const now=performance.now(); if(now-glowT<300)return; glowT=now;
   const lb=document.getElementById('lock-body');
-  lb.style.borderColor='#ffc2e0'; setTimeout(()=>lb.style.borderColor='',220);
+  lb.classList.add('zap'); setTimeout(()=>lb.classList.remove('zap'),260);
 }
-let hT=0;
+let hT=0,fT=0,fN=0,fLast=0;
 function drawHeart(){
   hCtx.clearRect(0,0,hW,hH); hT+=.013;
   const gp=(Math.sin(hT*1.2)+1)/2;
   drawNet();
-  // heart breathes
   const br=1+Math.sin(hT*2.2)*.035;
-  for(const n of hNodes){n.tx=hCx+(n.ox-hCx)*br;n.ty=hCy+(n.oy-hCy)*br;}
-  for(const e of hEdges){
-    const na=hNodes[e.a],nb=hNodes[e.b];
-    const al=Math.max(0,1-(e.d/(Math.min(hW,hH)*.065)));
-    const g=hCtx.createLinearGradient(na.x,na.y,nb.x,nb.y);
-    g.addColorStop(0,`rgba(255,45,120,${al*.52+gp*.14})`);
-    g.addColorStop(1,`rgba(255,110,180,${al*.33+gp*.09})`);
-    hCtx.save();hCtx.strokeStyle=g;hCtx.lineWidth=.8+gp*.5;
-    hCtx.shadowColor='#ff2d78';hCtx.shadowBlur=6+gp*8;
-    hCtx.beginPath();hCtx.moveTo(na.x,na.y);hCtx.lineTo(nb.x,nb.y);hCtx.stroke();hCtx.restore();
-  }
   for(const n of hNodes){
-    n.ph+=.038;const p=(Math.sin(n.ph)+1)/2;const r=n.r*(1+p*.48);
-    n.x+=n.vx;n.y+=n.vy;n.vx+=(n.tx-n.x)*.012;n.vy+=(n.ty-n.y)*.012;n.vx*=.965;n.vy*=.965;
-    hCtx.save();hCtx.shadowColor='#ff6eb4';hCtx.shadowBlur=10+p*14;
-    hCtx.fillStyle=`rgba(255,${108+p*62},${155+p*45},${.78+p*.22})`;
-    hCtx.beginPath();hCtx.arc(n.x,n.y,r,0,Math.PI*2);hCtx.fill();hCtx.restore();
+    const tx=hCx+(n.ox-hCx)*br,ty=hCy+(n.oy-hCy)*br;
+    n.x+=n.vx;n.y+=n.vy;n.vx+=(tx-n.x)*.012;n.vy+=(ty-n.y)*.012;n.vx*=.965;n.vy*=.965;
   }
+  // heart synapses: one wide soft pass + one thin bright pass (fake glow, no shadowBlur)
+  hCtx.beginPath();
+  for(let k=0;k<hEdges.length;k+=2){const a=hNodes[hEdges[k]],b=hNodes[hEdges[k+1]];hCtx.moveTo(a.x,a.y);hCtx.lineTo(b.x,b.y);}
+  hCtx.strokeStyle=`rgba(255,45,120,${.10+gp*.08})`;hCtx.lineWidth=4;hCtx.stroke();
+  hCtx.strokeStyle=`rgba(255,120,185,${.55+gp*.25})`;hCtx.lineWidth=.9+gp*.4;hCtx.stroke();
+  hCtx.globalCompositeOperation='lighter';
+  for(const n of hNodes){n.ph+=.038;const p=(Math.sin(n.ph)+1)/2;dot(n.x,n.y,n.r*(2.3+p*1.1),.55+p*.4);}
+  hCtx.globalCompositeOperation='source-over';hCtx.globalAlpha=1;
 }
-function loopHeart(){drawHeart();heartRaf=requestAnimationFrame(loopHeart);}
+function loopHeart(now){
+  drawHeart();
+  // adaptive quality: if the device can't keep ~40fps, lighten the scene
+  if(now&&fLast){fT+=now-fLast;fN++;
+    if(fN===90){if(fT/fN>25&&hQ>0){hQ--;buildHeart();}fT=fN=0;}}
+  fLast=now||0;
+  heartRaf=requestAnimationFrame(loopHeart);
+}
 
 /* ═══════════════════════════════════════════════════════
    PARTICLE BURST
@@ -1127,7 +1180,8 @@ function drawParts(){
   }
   if(!alive&&pActive){pActive=false;pCan.classList.remove('active');}
 }
-function loopParts(){drawParts();requestAnimationFrame(loopParts);}
+let partsRaf=0;
+function loopParts(){drawParts();partsRaf=pActive?requestAnimationFrame(loopParts):0;}
 
 /* ═══════════════════════════════════════════════════════
    QUIZ PHASE LOGIC
@@ -1252,7 +1306,7 @@ function goPraise(){
 ═══════════════════════════════════════════════════════ */
 function goLock(){
   hidePhase('phase-praise',()=>{
-    buildHeart(); loopHeart();
+    fLast=0;fT=fN=0;buildHeart(); loopHeart();
     showPhase('phase-lock');
     resetDials();
     locked=true;
@@ -1317,7 +1371,7 @@ function doUnlock(){
   const rc=lBody.getBoundingClientRect();
   const cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;
   setTimeout(()=>{
-    pCan.classList.add('active');initParts();burst(cx,cy);pActive=true;
+    pCan.classList.add('active');initParts();burst(cx,cy);pActive=true;if(!partsRaf)loopParts();
   },480);
   setTimeout(()=>{
     document.getElementById('phase-lock').classList.remove('active');
@@ -1325,7 +1379,7 @@ function doUnlock(){
   },750);
   setTimeout(()=>{
     document.getElementById('stars').classList.add('on');
-    buildStars();loopStars();
+    buildStars();startStars();
     showPhase('phase-final');
     document.getElementById('reset-btn').classList.add('visible');
     clearTimeout(window.__nbT);
@@ -1370,8 +1424,8 @@ window.addEventListener('resize',()=>{
 // All phases hidden initially except quiz
 document.querySelectorAll('.phase').forEach(p=>p.style.display='none');
 loadQuestion(0);
-initParts();loopParts();
-buildStars();loopStars();
+initParts();
+buildStars();
 // Show phase 1
 showPhase('phase-quiz');
 
